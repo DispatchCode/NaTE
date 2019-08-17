@@ -3,11 +3,7 @@
 #include <memory.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <ild.h>
-#include <cpu.h>
 
-#include "include/ild.h"
-#include "include/cpu.h"
 #include "include/cpu_exec.h"
 
 
@@ -38,7 +34,6 @@ static void print_video_memory(i8086_cpu cpu)
         }
         printf("\n");
     }
-
 }
 
 size_t input_file_size(FILE *hfile)
@@ -77,19 +72,16 @@ int main()
         if(instruction.label == 0 || (instruction.label != 0 && !cpu->jmp_taken))
             cpu->IP += len;
 
-        if(cpu->hlt_suspend) {
+        if(cpu->hlt_suspend)
+        {
             print_video_memory(cpu);
             getchar();
-            cpu->hlt_suspend = false;
+            break;
         }
 
-        if(cpu->unsupported_op )
+        if(cpu->unsupported_op)
             break;
     }
-
-    print_cpu_state(cpu);
-    printf("\n");
-    print_video_memory(cpu);
 
     if(cpu != NULL)
     {
