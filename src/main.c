@@ -67,7 +67,7 @@ int main()
 
         len = decode_x86(&instruction, cpu->IP, 1, (char*) &cpu->memory[0]);
 
-        emulate(cpu, instruction);
+        cpu_emulation(cpu, instruction);
 
         if(instruction.label == 0 || (instruction.label != 0 && !cpu->jmp_taken))
             cpu->IP += len;

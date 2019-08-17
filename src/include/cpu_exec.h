@@ -4,7 +4,7 @@
 #include "cpu.h"
 #include "ild.h"
 
-void emulate(i8086_cpu cpu, _x86_instr instr);
+void cpu_emulation(i8086_cpu cpu, _x86_instr instr);
 void set_flag16(i8086_cpu cpu,uint16_t op1, uint16_t op2);
 void setflag_sz16(i8086_cpu cpu,uint16_t value);
 void set_flag_add16(i8086_cpu cpu, uint16_t op1, uint16_t op2);

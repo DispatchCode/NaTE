@@ -27,13 +27,13 @@ uint16_t pop(i8086_cpu cpu, _x86_instr instr)
     return value;
 }
 
-_inline void setflag_sz16(i8086_cpu cpu,uint16_t value)
+inline void setflag_sz16(i8086_cpu cpu,uint16_t value)
 {
     cpu->flags.bit.zero = (!value) ? 1 : 0;
     cpu->flags.bit.sign = (value & 0x8000) >> 15;
 }
 
-_inline void set_flag16(i8086_cpu cpu,uint16_t op1, uint16_t op2)
+inline void set_flag16(i8086_cpu cpu,uint16_t op1, uint16_t op2)
 {
     uint32_t result = op1 - op2;
     setflag_sz16(cpu, (uint16_t)result);
@@ -41,20 +41,20 @@ _inline void set_flag16(i8086_cpu cpu,uint16_t op1, uint16_t op2)
     cpu->flags.bit.carry = (result & 0xFFFF0000) ? 1 : 0;
 }
 
-_inline void set_flag_add16(i8086_cpu cpu, uint16_t op1, uint16_t op2)
+inline void set_flag_add16(i8086_cpu cpu, uint16_t op1, uint16_t op2)
 {
     uint32_t result = op1 + op2;
     cpu->flags.bit.carry = (result & 0xFFFF0000) ? 1 : 0;
 }
 
-_inline void set_flag_sub16(i8086_cpu cpu, uint16_t op1, uint16_t op2)
+inline void set_flag_sub16(i8086_cpu cpu, uint16_t op1, uint16_t op2)
 {
     uint32_t result = op1 - op2;
     setflag_sz16(cpu, result);
     cpu->flags.bit.carry = (result & 0xFFFF0000) ? 1 : 0;
 }
 
-_inline void set_flag_xor16(i8086_cpu cpu, uint16_t op1, uint16_t op2)
+inline void set_flag_xor16(i8086_cpu cpu, uint16_t op1, uint16_t op2)
 {
     cpu->flags.bit.carry    ^= cpu->flags.bit.carry;
     cpu->flags.bit.overflow ^= cpu->flags.bit.overflow;
@@ -62,7 +62,7 @@ _inline void set_flag_xor16(i8086_cpu cpu, uint16_t op1, uint16_t op2)
     setflag_sz16(cpu, op1 ^ op2);
 }
 
-_inline void set_flag_or16(i8086_cpu cpu, uint16_t op1, uint16_t op2)
+inline void set_flag_or16(i8086_cpu cpu, uint16_t op1, uint16_t op2)
 {
     cpu->flags.bit.carry    ^= cpu->flags.bit.carry;
     cpu->flags.bit.overflow ^= cpu->flags.bit.overflow;
@@ -70,7 +70,7 @@ _inline void set_flag_or16(i8086_cpu cpu, uint16_t op1, uint16_t op2)
     setflag_sz16(cpu, op1 | op2);
 }
 
-_inline void set_flag_and16(i8086_cpu cpu,uint16_t op1, uint16_t op2)
+inline void set_flag_and16(i8086_cpu cpu,uint16_t op1, uint16_t op2)
 {
     uint32_t result = op1 & op2;
     setflag_sz16(cpu, result);
@@ -79,7 +79,7 @@ _inline void set_flag_and16(i8086_cpu cpu,uint16_t op1, uint16_t op2)
     cpu->flags.bit.overflow = 0;
 }
 
-_inline void set_flag_or8(i8086_cpu cpu, uint16_t op1, uint8_t op2)
+inline void set_flag_or8(i8086_cpu cpu, uint16_t op1, uint8_t op2)
 {
     cpu->flags.bit.carry    ^= cpu->flags.bit.carry;
     cpu->flags.bit.overflow ^= cpu->flags.bit.overflow;
@@ -87,19 +87,19 @@ _inline void set_flag_or8(i8086_cpu cpu, uint16_t op1, uint8_t op2)
     setflag_sz8(cpu, op1 | op2);
 }
 
-_inline void set_flag_add8(i8086_cpu cpu,uint8_t op1, uint8_t op2)
+inline void set_flag_add8(i8086_cpu cpu,uint8_t op1, uint8_t op2)
 {
     uint16_t result = op1 + op2;
     cpu->flags.bit.carry = (result & 0xFF00) ? 1 : 0;
 }
 
-_inline void setflag_sz8(i8086_cpu cpu,uint8_t value)
+inline void setflag_sz8(i8086_cpu cpu,uint8_t value)
 {
     cpu->flags.bit.zero = (!value) ? 1 : 0;
     cpu->flags.bit.sign = (value & 0x80) >> 7;
 }
 
-_inline void set_flag_and8(i8086_cpu cpu,uint8_t op1, uint8_t op2)
+inline void set_flag_and8(i8086_cpu cpu,uint8_t op1, uint8_t op2)
 {
     uint16_t result = op1 & op2;
     setflag_sz8(cpu, (uint8_t)result);
@@ -108,14 +108,15 @@ _inline void set_flag_and8(i8086_cpu cpu,uint8_t op1, uint8_t op2)
     cpu->flags.bit.overflow = 0;
 }
 
-_inline void set_flag8(i8086_cpu cpu,uint8_t op1, uint8_t op2)
+inline void set_flag8(i8086_cpu cpu,uint8_t op1, uint8_t op2)
 {
     uint16_t result = op1 - op2;
     setflag_sz8(cpu, (uint8_t)result);
     cpu->flags.bit.carry = (result & 0xFF00) ? 1 : 0;
 }
 
-__inline int32_t get_ea(i8086_cpu cpu, _x86_instr instr, uint8_t mod, uint8_t rm)
+// Effective Address (without segments)
+inline int32_t get_ea(i8086_cpu cpu, _x86_instr instr, uint8_t mod, uint8_t rm)
 {
     uint16_t ea = 0;
 
@@ -190,7 +191,7 @@ static uint16_t readmem8(i8086_cpu cpu, _x86_instr instr)
         return get_reg8(cpu, instr.modregrm.field.rm);
 }
 
-_inline void cpu_write_mem8(i8086_cpu cpu, int32_t address, uint8_t value)
+inline void cpu_write_mem8(i8086_cpu cpu, int32_t address, uint8_t value)
 {
     cpu->memory[address] = value;
 }
@@ -198,12 +199,12 @@ _inline void cpu_write_mem8(i8086_cpu cpu, int32_t address, uint8_t value)
 //
 // get 2bytes of memory at the specified offset
 //
-_inline uint16_t cpu_read_mem16(i8086_cpu cpu, int32_t offset)
+inline uint16_t cpu_read_mem16(i8086_cpu cpu, int32_t offset)
 {
     return (cpu->memory[offset+1] << 8) |  cpu->memory[offset];
 }
 
-_inline uint8_t cpu_read_mem8(i8086_cpu cpu, int32_t offset)
+inline uint8_t cpu_read_mem8(i8086_cpu cpu, int32_t offset)
 {
     return cpu->memory[offset];
 }
@@ -235,12 +236,19 @@ static void writemem8(i8086_cpu cpu, _x86_instr instr, uint8_t value)
     }
 }
 
+//
+// Instruction decode
+//
+
 void opxx(i8086_cpu cpu, _x86_instr instr)
 {
     printf("Unsupported OP: %X\n", instr.op);
     cpu->unsupported_op = true;
 }
 
+/*
+ * ADD  Eb, Gb
+ */
 static void op01(i8086_cpu cpu, _x86_instr instr)
 {
     uint16_t reg  = get_reg16(cpu, instr.modregrm.field.reg);
@@ -250,6 +258,9 @@ static void op01(i8086_cpu cpu, _x86_instr instr)
     writemem16(cpu, instr, reg + data);
 }
 
+/*
+ * ADD  AL, Ib
+ */
 static void op04(i8086_cpu cpu, _x86_instr instr)
 {
     uint8_t reg  = get_reg8(cpu, AL);
@@ -259,6 +270,9 @@ static void op04(i8086_cpu cpu, _x86_instr instr)
     set_flag_add8(cpu, AL, reg + data);
 }
 
+/*
+ * ADD  AX, Iv
+ */
 static void op05(i8086_cpu cpu, _x86_instr instr)
 {
     uint16_t reg  = get_reg16(cpu, AX);
@@ -268,6 +282,9 @@ static void op05(i8086_cpu cpu, _x86_instr instr)
     set_flag_add16(cpu, AL, reg + data);
 }
 
+/*
+ * OR  Ev, Gv
+ */
 static void op09(i8086_cpu cpu, _x86_instr instr)
 {
     uint16_t reg_value = get_reg16(cpu, instr.modregrm.field.reg);
@@ -277,17 +294,21 @@ static void op09(i8086_cpu cpu, _x86_instr instr)
     writemem16(cpu,instr, reg_value | mem_value);
 }
 
+/*
+ * SBB  Ev, Gv
+ */
 static void op19(i8086_cpu cpu, _x86_instr instr)
 {
-
     uint16_t val_reg = get_reg16(cpu, instr.modregrm.field.reg);
     uint16_t val_mem = readmem16(cpu, instr);
 
     writemem16(cpu,instr, (val_mem-val_reg+cpu->flags.bit.carry));
     set_flag16(cpu, val_mem, val_reg+cpu->flags.bit.carry);
-
 }
 
+/*
+ * AND  Eb, Gb
+ */
 static void op20(i8086_cpu cpu, _x86_instr instr)
 {
     uint16_t reg_value = get_reg16(cpu, instr.modregrm.field.reg);
@@ -297,6 +318,9 @@ static void op20(i8086_cpu cpu, _x86_instr instr)
     writemem16(cpu, instr, reg_value & mem_value);
 }
 
+/*
+ * SUB  Ev, Gv
+ */
 static void op29(i8086_cpu cpu, _x86_instr instr)
 {
     uint16_t reg  = get_reg16(cpu, instr.modregrm.field.reg);
@@ -304,9 +328,11 @@ static void op29(i8086_cpu cpu, _x86_instr instr)
 
     set_flag16(cpu, data, reg);
     writemem16(cpu, instr, data-reg);
-
 }
 
+/*
+ * XOR  Ev, Gv
+ */
 static void op31(i8086_cpu cpu, _x86_instr instr)
 {
     uint16_t reg_value = get_reg16(cpu, instr.modregrm.field.reg);
@@ -316,6 +342,9 @@ static void op31(i8086_cpu cpu, _x86_instr instr)
     writemem16(cpu,instr, reg_value ^ mem_value);
 }
 
+/*
+ * CMP  Ev, Gv
+ */
 static void op39(i8086_cpu cpu, _x86_instr instr)
 {
     uint16_t op1 = get_reg16(cpu, instr.modregrm.field.reg);
@@ -324,6 +353,9 @@ static void op39(i8086_cpu cpu, _x86_instr instr)
     set_flag16(cpu, op2, op1);
 }
 
+/*
+ * CMP  AL, Ib
+ */
 static void op3C(i8086_cpu cpu, _x86_instr instr)
 {
     uint8_t disp8    = instr.imm;
@@ -333,7 +365,10 @@ static void op3C(i8086_cpu cpu, _x86_instr instr)
     set_flag8(cpu, al_value, disp8);
 }
 
-static void op47(i8086_cpu cpu, _x86_instr instr)
+/*
+ *  INC  Zv
+ */
+static void inc(i8086_cpu cpu, _x86_instr instr)
 {
     uint8_t  cf  = cpu->flags.bit.carry;
     uint16_t op1 = get_reg16(cpu, instr.op & 0x07);
@@ -345,7 +380,10 @@ static void op47(i8086_cpu cpu, _x86_instr instr)
     cpu->flags.bit.carry = cf;
 }
 
-static void op4B(i8086_cpu cpu, _x86_instr instr)
+/*
+ *  DEC  Zv
+ */
+static void dec(i8086_cpu cpu, _x86_instr instr)
 {
     uint8_t  cf  = cpu->flags.bit.carry;
     uint16_t op1 = get_reg16(cpu, instr.op & 0x07);
@@ -357,16 +395,25 @@ static void op4B(i8086_cpu cpu, _x86_instr instr)
     cpu->flags.bit.carry = cf;
 }
 
+/*
+ * PUSH  Zv
+ */
 static void op5x(i8086_cpu cpu, _x86_instr instr)
 {
     push(cpu, get_reg16(cpu, instr.op & 0x07));
 }
 
+/*
+ * POP  Zv
+ */
 static void op58(i8086_cpu cpu, _x86_instr instr)
 {
     set_reg16(cpu, instr.op & 0x07, pop(cpu, instr));
 }
 
+/*
+ * JB/JNAE/JC  Jbs
+ */
 static void op72(i8086_cpu cpu, _x86_instr instr)
 {
     cpu->jmp_taken = false;
@@ -377,6 +424,9 @@ static void op72(i8086_cpu cpu, _x86_instr instr)
     }
 }
 
+/*
+ * JZ/JE  Jbs
+ */
 static void op74(i8086_cpu cpu, _x86_instr instr)
 {
     cpu->jmp_taken = false;
@@ -387,6 +437,9 @@ static void op74(i8086_cpu cpu, _x86_instr instr)
     }
 }
 
+/*
+ * JNZ/JNE  Jbs
+ */
 static void op75(i8086_cpu cpu, _x86_instr instr)
 {
     cpu->jmp_taken = false;
@@ -397,6 +450,9 @@ static void op75(i8086_cpu cpu, _x86_instr instr)
     }
 }
 
+/*
+ * JBE/JNA  Jbs
+ */
 static void op76(i8086_cpu cpu, _x86_instr instr)
 {
     cpu->jmp_taken = false;
@@ -407,6 +463,9 @@ static void op76(i8086_cpu cpu, _x86_instr instr)
     }
 }
 
+/*
+ * JNBE/JA  Jbs
+ */
 static void op77(i8086_cpu cpu, _x86_instr instr)
 {
     cpu->jmp_taken = false;
@@ -417,6 +476,9 @@ static void op77(i8086_cpu cpu, _x86_instr instr)
     }
 }
 
+/*
+ * JNS  Jbs
+ */
 static void op79(i8086_cpu cpu, _x86_instr instr)
 {
     cpu->jmp_taken = false;
@@ -427,8 +489,12 @@ static void op79(i8086_cpu cpu, _x86_instr instr)
     }
 }
 
+/*
+ * CMP  Ev, Iv
+ */
 static void cmp_81(i8086_cpu cpu, _x86_instr instr)
 {
+    // direction bit
     if(instr.op & 0x01)
     {
         uint16_t imm = instr.imm;
@@ -447,9 +513,11 @@ static void cmp_81(i8086_cpu cpu, _x86_instr instr)
 
         set_flag8(cpu, readmem8(cpu, instr), imm);
     }
-
 }
 
+/*
+ * ADD  Eb, Ib
+ */
 static void add_82(i8086_cpu cpu, _x86_instr instr)
 {
     if(instr.op & 0x01)
@@ -476,9 +544,11 @@ static void add_82(i8086_cpu cpu, _x86_instr instr)
         set_flag8(cpu, op,imm);
         writemem8(cpu, instr, op+imm);
     }
-
 }
 
+/*
+ * ADC  Ev, Ibs
+ */
 static void adc_83(i8086_cpu cpu, _x86_instr instr)
 {
     if(instr.op & 0x01)
@@ -505,9 +575,11 @@ static void adc_83(i8086_cpu cpu, _x86_instr instr)
         writemem8(cpu, instr, op+imm+cpu->flags.bit.carry);
         set_flag8(cpu, op,imm);
     }
-
 }
 
+/*
+ * AND  Eb, Ibs
+ */
 static void and_83(i8086_cpu cpu, _x86_instr instr)
 {
     if(instr.op & 0x01)
@@ -532,9 +604,11 @@ static void and_83(i8086_cpu cpu, _x86_instr instr)
         set_flag_and8(cpu, op,imm);
         writemem8(cpu, instr, op&imm);
     }
-
 }
 
+/*
+ * SUB  Ev, Ibs
+ */
 static void sub_83(i8086_cpu cpu, _x86_instr instr)
 {
     if(instr.op & 0x01)
@@ -557,9 +631,11 @@ static void sub_83(i8086_cpu cpu, _x86_instr instr)
         writemem8(cpu, instr, op-imm);
         set_flag8(cpu, op,imm);
     }
-
 }
 
+/*
+ * OR  Eb, Ib
+ */
 static void or_82(i8086_cpu cpu, _x86_instr instr)
 {
     if(instr.op & 0x01)
@@ -580,6 +656,7 @@ static void or_82(i8086_cpu cpu, _x86_instr instr)
     }
 }
 
+// same OP, decoded using reg field of mod_reg_rm
 static void op81(i8086_cpu cpu, _x86_instr instr)
 {
     switch(instr.modregrm.field.reg)
@@ -618,6 +695,9 @@ static void op81(i8086_cpu cpu, _x86_instr instr)
     }
 }
 
+/*
+ * XCHG  Eb, Gb
+ */
 static void op86(i8086_cpu cpu, _x86_instr instr)
 {
     uint8_t op1 = get_reg8(cpu, instr.modregrm.field.reg);
@@ -627,27 +707,50 @@ static void op86(i8086_cpu cpu, _x86_instr instr)
     writemem8(cpu, instr, op1);
 }
 
+/*
+ * MOV  Eb, Gb
+ */
 static void op88(i8086_cpu cpu, _x86_instr instr)
 {
     writemem8(cpu,instr, get_reg8(cpu, instr.modregrm.field.reg));
 }
 
+/*
+ * MOV  Ev, Gv
+ */
 static void op89(i8086_cpu cpu, _x86_instr instr)
 {
     writemem16(cpu, instr, get_reg16(cpu, instr.modregrm.field.reg));
 }
 
+/*
+ * MOV  Eb, Gb
+ */
 static void op8A(i8086_cpu cpu, _x86_instr instr)
 {
     uint8_t value = readmem8(cpu, instr);
     set_reg8(cpu, instr.modregrm.field.reg, value);
 }
 
+/*
+ * MOV  Gv, Ev
+ */
+static void op8B(i8086_cpu cpu, _x86_instr instr)
+{
+    set_reg16(cpu, instr.modregrm.field.reg, readmem16(cpu, instr));
+}
+
+/*
+ * NOP
+ */
 static void op90(i8086_cpu cpu, _x86_instr instr)
 {
  // NOP
 }
 
+/*
+ * XCHG  Gv, Ev
+ */
 static void op92(i8086_cpu cpu, _x86_instr instr)
 {
     uint16_t ax_val = get_reg16(cpu, AX);
@@ -657,21 +760,25 @@ static void op92(i8086_cpu cpu, _x86_instr instr)
     set_reg16(cpu, instr.op & 0x07, ax_val);
 }
 
-static void op8B(i8086_cpu cpu, _x86_instr instr)
-{
-    set_reg16(cpu, instr.modregrm.field.reg, readmem16(cpu, instr));
-}
-
+/*
+ * MOV  Zb, Ib
+ */
 static void opB0(i8086_cpu cpu, _x86_instr instr)
 {
     set_reg8(cpu, instr.op & 0x07, instr.imm);
 }
 
+/*
+ * MOV  Zv, Iv
+ */
 static void opBC(i8086_cpu cpu, _x86_instr instr)
 {
     set_reg16(cpu,  instr.op & 0x07, instr.imm);
 }
 
+/*
+ * CALL  Jv
+ */
 static void opE8(i8086_cpu cpu, _x86_instr instr)
 {
     push(cpu, cpu->IP+3);
@@ -680,15 +787,21 @@ static void opE8(i8086_cpu cpu, _x86_instr instr)
     cpu->jmp_taken = true;
 }
 
+/*
+ * RETN
+ */
 static void opC3(i8086_cpu cpu, _x86_instr instr)
 {
     cpu->IP = pop(cpu, instr);
     cpu->jmp_taken = true;
 }
 
+/*
+ * MOV  Ev, Gv
+ */
 static void op_mov(i8086_cpu cpu, _x86_instr instr)
 {
-
+    // direction bit
     if(instr.op & 0x01)
     {
         uint16_t imm = instr.imm;
@@ -713,17 +826,26 @@ static void multiOP(i8086_cpu cpu, _x86_instr instr)
     }
 }
 
+/*
+ * JMP  Jbs
+ */
 static void opEB(i8086_cpu cpu, _x86_instr instr)
 {
     cpu->IP = (uint16_t) instr.label;
     cpu->jmp_taken = true;
 }
 
+/*
+ * STC
+ */
 static void opF9(i8086_cpu cpu, _x86_instr instr)
 {
     cpu->flags.bit.carry = 1;
 }
 
+/*
+ * INC  Eb
+ */
 static void opFEadd8(i8086_cpu cpu, _x86_instr instr)
 {
     uint8_t  cf  = cpu->flags.bit.carry;
@@ -736,6 +858,9 @@ static void opFEadd8(i8086_cpu cpu, _x86_instr instr)
     cpu->flags.bit.carry = cf;
 }
 
+/*
+ * INC  Ev
+ */
 static void opFEadd16(i8086_cpu cpu, _x86_instr instr)
 {
     uint16_t  cf = cpu->flags.bit.carry;
@@ -748,6 +873,9 @@ static void opFEadd16(i8086_cpu cpu, _x86_instr instr)
     cpu->flags.bit.carry = cf;
 }
 
+/*
+ * DEC  Eb
+ */
 static void opFEsub8(i8086_cpu cpu, _x86_instr instr)
 {
     uint8_t  cf  = cpu->flags.bit.carry;
@@ -759,6 +887,10 @@ static void opFEsub8(i8086_cpu cpu, _x86_instr instr)
 
     cpu->flags.bit.carry = cf;
 }
+
+/*
+ * DEC  Ev
+ */
 static void opFEsub16(i8086_cpu cpu, _x86_instr instr)
 {
     uint16_t  cf  = cpu->flags.bit.carry;
@@ -789,16 +921,18 @@ static void opmul(i8086_cpu cpu, _x86_instr instr)
         break;
         default:
             opxx(cpu, instr);
-
     }
 }
 
+/*
+ * HLT
+ */
 static void opF4(i8086_cpu cpu, _x86_instr instr)
 {
     cpu->hlt_suspend = true;
 }
 
-void emulate(i8086_cpu cpu, _x86_instr instr)
+void cpu_emulation(i8086_cpu cpu, _x86_instr instr)
 {
     cpu->current_op = instr.op;
     one_byte_opcodes[instr.op](cpu, instr);
@@ -810,7 +944,7 @@ static ob_opcodes one_byte_opcodes[256] = {
    /* 01h */ &opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&op19,&opxx,&opxx,&opxx,&opxx,&opxx, &opxx,
    /* 02h */ &op20,&opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&op29,&opxx,&opxx,&opxx,&opxx,&opxx, &opxx,
    /* 03h */ &opxx,&op31,&opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&op39,&opxx,&opxx,&op3C,&opxx,&opxx, &opxx,
-   /* 04h */ &op47,&op47,&op47,&op47,&op47,&op47,&op47,&op47,&op4B,&op4B,&op4B,&op4B,&op4B,&op4B,&op4B, &op4B,
+   /* 04h */ &inc, &inc, &inc, &inc, &inc, &inc, &inc, &inc, &dec, &dec, &dec, &dec, &dec, &dec, &dec,  &dec,
    /* 05h */ &op5x,&op5x,&op5x,&op5x,&op5x,&op5x,&op5x,&op5x,&op58,&op58,&op58,&op58,&op58,&op58,&op58, &op58,
    /* 06h */ &opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&opxx,&opxx, &opxx,
    /* 07h */ &opxx,&opxx,&op72,&opxx,&op74,&op75,&op76,&op77,&opxx,&op79,&opxx,&opxx,&opxx,&opxx,&opxx, &opxx,
